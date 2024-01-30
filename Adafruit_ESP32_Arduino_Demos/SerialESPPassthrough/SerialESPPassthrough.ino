@@ -129,12 +129,18 @@ void setup() {
 
 void loop() {
   while (Serial.available()) {
-    pixel.setPixelColor(0, 10, 0, 0); if(pixel.canShow()) pixel.show();
+    if(pixel.canShow()) {
+      pixel.setPixelColor(0, 10, 0, 0);
+      pixel.show();
+    }
     SerialESP32.write(Serial.read());
   }
 
   while (SerialESP32.available()) {
-    pixel.setPixelColor(0, 0, 0, 10); if(pixel.canShow()) pixel.show();
+    if(pixel.canShow()) {
+      pixel.setPixelColor(0, 0, 0, 10);
+      pixel.show();
+    }
     Serial.write(SerialESP32.read());
   }
 }
