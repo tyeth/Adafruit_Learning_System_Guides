@@ -67,6 +67,13 @@ unsigned long baud = 115200;
   #define SPIWIFI_ACK    7  // a.k.a BUSY or READY pin
   #define ESP32_GPIO0   -1
   #define NEOPIXEL_PIN   8
+#elif defined(ARDUINO_ADAFRUIT_ITSYBITSY_RP2040)
+  #define SerialESP32   Serial1
+  #define SPIWIFI       SPI  // The SPI port
+  #define SPIWIFI_SS    11   // Chip select pin
+  #define ESP32_RESETN  10   // Reset pin
+  #define SPIWIFI_ACK   9    // a.k.a BUSY or READY pin
+  #define ESP32_GPIO0   8    // ESP32 GPIO0, Silkscreen Pin 10 on Bitsy Airlift
 #elif !defined(SPIWIFI_SS)  // if the wifi definition isnt in the board variant
   // Don't change the names of these #define's! they match the variant ones
   #define SerialESP32   Serial1
@@ -88,6 +95,15 @@ Adafruit_NeoPixel pixel = Adafruit_NeoPixel(1, PIN_NEOPIXEL, NEO_GRB + NEO_KHZ80
 
 void setup() {
   Serial.begin(baud);
+
+#ifdef NEOPIXEL_POWER
+  pinMode(NEOPIXEL_POWER, OUTPUT);
+  digitalWrite(NEOPIXEL_POWER, HIGH);
+#elif defined(NEOPIXEL_I2C_POWER)
+  pinMode(NEOPIXEL_I2C_POWER, OUTPUT);
+  digitalWrite(NEOPIXEL_I2C_POWER, HIGH);
+#endif
+
   pixel.begin();
   pixel.setPixelColor(0, 10, 10, 10); pixel.show();
 
@@ -113,12 +129,12 @@ void setup() {
 
 void loop() {
   while (Serial.available()) {
-    pixel.setPixelColor(0, 10, 0, 0); pixel.show();
+    pixel.setPixelColor(0, 10, 0, 0); if(pixel.canShow()) pixel.show();
     SerialESP32.write(Serial.read());
   }
 
   while (SerialESP32.available()) {
-    pixel.setPixelColor(0, 0, 0, 10); pixel.show();
+    pixel.setPixelColor(0, 0, 0, 10); if(pixel.canShow()) pixel.show();
     Serial.write(SerialESP32.read());
   }
 }
