@@ -33,7 +33,7 @@ pyportal = PyPortal(default_bg=BACKGROUND_FILE,
                     image_position=(0, 0),
                     text_font="/fonts/OpenSans-9.bdf",
                     json_path=["data", 0, "title"],
-                    text_position=(4, HEIGHT - 9),
+                    text_position=(4, HEIGHT - 15),
                     text_color=0xFFFFFF)
 
 circle = Circle(WIDTH - 8, HEIGHT - 7, 5, fill=0)
